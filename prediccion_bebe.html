@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Predicción Familiar - Baby Betting Pool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #2c3e50;
+            --color-secondary: #34495e;
+            --color-accent: #e8b298;
+            --color-light-accent: #f5e6dc;
+            --color-text: #2c3e50;
+            --color-text-muted: #7f8c8d;
+            --color-background: #ffffff;
+            --color-surface: #f8f9fa;
+            --color-border: #e1e8ed;
+            --color-success: #27ae60;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: var(--color-background);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: white;
+            padding: 3rem 2rem 2.5rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .intro {
+            background: var(--color-light-accent);
+            padding: 1.5rem 2rem;
+            border-left: 4px solid var(--color-accent);
+            margin: 2rem 2rem 0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            line-height: 1.7;
+        }
+
+        .form-section {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .points-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--color-background);
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(232, 178, 152, 0.15);
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--color-accent);
+        }
+
+        .week-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+
+        .week-button {
+            padding: 0.75rem;
+            border: 1.5px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-background);
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .week-button .week-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .week-button .week-range {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
+
+        .week-button:hover {
+            border-color: var(--color-accent);
+            background: var(--color-light-accent);
+        }
+
+        .week-button.selected {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        .week-button.selected .week-range {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .time-slot {
+            padding: 0.875rem;
+            border: 1.5px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-background);
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .time-slot .time-range {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
+
+        .time-slot:hover {
+            border-color: var(--color-accent);
+            background: var(--color-light-accent);
+        }
+
+        .time-slot.selected {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        .time-slot.selected .time-range {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .submit-section {
+            padding: 2rem;
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(44, 62, 80, 0.2);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(44, 62, 80, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .points-breakdown {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1.5px solid var(--color-border);
+            display: none;
+        }
+
+        .points-breakdown.visible {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .points-breakdown h3 {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .points-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .points-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--color-success);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--color-border);
+        }
+
+        .points-label {
+            color: var(--color-text-muted);
+        }
+
+        .points-value {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .confirmation-message {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid var(--color-success);
+            padding: 1.25rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .confirmation-message.visible {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        .confirmation-message h4 {
+            color: var(--color-success);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .confirmation-message p {
+            color: var(--color-text);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .input-hint {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .header {
+                padding: 2rem 1rem 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header .subtitle {
+                font-size: 0.85rem;
+            }
+
+            .intro {
+                margin: 1.5rem 1rem 0;
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .form-section {
+                padding: 1rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+
+            label {
+                font-size: 0.9rem;
+            }
+
+            .points-badge {
+                font-size: 0.7rem;
+                padding: 0.15rem 0.4rem;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="date"],
+            select {
+                padding: 0.65rem 0.85rem;
+                font-size: 16px; /* Evita zoom en iOS */
+            }
+
+            .week-selector {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 0.5rem;
+            }
+
+            .week-button {
+                padding: 0.5rem 0.25rem;
+            }
+
+            .week-button .week-number {
+                font-size: 1rem;
+            }
+
+            .week-button .week-range {
+                font-size: 0.65rem;
+            }
+
+            .time-slots {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+
+            .time-slot {
+                padding: 0.65rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .time-slot .time-range {
+                font-size: 0.7rem;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .radio-option {
+                width: 100%;
+                padding: 0.75rem;
+                border: 1.5px solid var(--color-border);
+                border-radius: 8px;
+                background: var(--color-background);
+                transition: all 0.2s ease;
+            }
+
+            .radio-option:has(input:checked) {
+                background: var(--color-light-accent);
+                border-color: var(--color-accent);
+            }
+
+            .submit-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .submit-button {
+                font-size: 1rem;
+                padding: 0.875rem 1.5rem;
+            }
+
+            .points-breakdown {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .points-breakdown h3 {
+                font-size: 1.1rem;
+            }
+
+            .confirmation-message {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .input-hint {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Predicción Familiar de Nacimiento</h1>
+            <p class="subtitle">Baby Betting Pool · Ecuador → Los Ángeles</p>
+        </div>
+
+        <div class="intro">
+            <p>La familia vota desde Ecuador para el bebé que nacerá en Los Ángeles. Comparte tu predicción sobre cuándo y cómo llegará el nuevo miembro de la familia. ¡El ganador se lleva la gloria!</p>
+        </div>
+
+        <form id="predictionForm" class="form-section">
+            <div class="form-group">
+                <label for="nombre">Nombre del familiar</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span>Mes estimado de nacimiento</span>
+                    <span class="points-badge">10 pts</span>
+                </label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="mes" value="Mayo" required>
+                        <span>Mayo</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="mes" value="Junio" required>
+                        <span>Junio</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span>Semana de gestación</span>
+                    <span class="points-badge">15 pts</span>
+                </label>
+                <div class="week-selector">
+                    <div class="week-button" data-week="37">
+                        <div class="week-number">37</div>
+                        <div class="week-range">23-29 May</div>
+                    </div>
+                    <div class="week-button" data-week="38">
+                        <div class="week-number">38</div>
+                        <div class="week-range">30 May-5 Jun</div>
+                    </div>
+                    <div class="week-button" data-week="39">
+                        <div class="week-number">39</div>
+                        <div class="week-range">6-12 Jun</div>
+                    </div>
+                    <div class="week-button" data-week="40">
+                        <div class="week-number">40</div>
+                        <div class="week-range">13-19 Jun</div>
+                    </div>
+                    <div class="week-button" data-week="41">
+                        <div class="week-number">41</div>
+                        <div class="week-range">20-26 Jun</div>
+                    </div>
+                </div>
+                <input type="hidden" id="semana" name="semana" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha">
+                    <span>Fecha exacta de nacimiento</span>
+                    <span class="points-badge">🏆 30 pts</span>
+                </label>
+                <input type="date" id="fecha" name="fecha" min="2025-05-01" max="2025-06-30" required>
+                <input type="hidden" id="fechaFormateada" name="fechaFormateada">
+                <p class="input-hint">Selecciona el día específico que predices</p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span>Franja horaria del nacimiento</span>
+                    <span class="points-badge">20 pts</span>
+                </label>
+                <div class="time-slots">
+                    <div class="time-slot" data-time="Madrugada">
+                        <span>🌙 Madrugada</span>
+                        <span class="time-range">12am - 6am</span>
+                    </div>
+                    <div class="time-slot" data-time="Mañana">
+                        <span>☀️ Mañana</span>
+                        <span class="time-range">6am - 12pm</span>
+                    </div>
+                    <div class="time-slot" data-time="Tarde">
+                        <span>🌤️ Tarde</span>
+                        <span class="time-range">12pm - 6pm</span>
+                    </div>
+                    <div class="time-slot" data-time="Noche">
+                        <span>🌆 Noche</span>
+                        <span class="time-range">6pm - 12am</span>
+                    </div>
+                </div>
+                <input type="hidden" id="franja" name="franja" required>
+            </div>
+
+            <div class="form-group">
+                <label for="peso">
+                    <span>Peso estimado (gramos)</span>
+                    <span class="points-badge">15 pts</span>
+                </label>
+                <input type="number" id="peso" name="peso" min="2000" max="5000" step="50" placeholder="3500" required>
+                <p class="input-hint">Típicamente entre 2500 - 4500 gramos (el más cercano gana)</p>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span>Tipo de parto</span>
+                    <span class="points-badge">10 pts</span>
+                </label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="parto" value="Natural" required>
+                        <span>Parto Natural</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="parto" value="Cesárea" required>
+                        <span>Cesárea</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="estatura">Pregunta de desempate: Estatura (centímetros)</label>
+                <input type="number" id="estatura" name="estatura" min="40" max="60" step="0.5" placeholder="50.0" required>
+                <p class="input-hint">Longitud del bebé al nacer (típicamente 45 - 55 cm)</p>
+            </div>
+
+            <div class="form-group">
+                <label for="segundoNombre">Predicción del segundo nombre</label>
+                <select id="segundoNombre" name="segundoNombre" required>
+                    <option value="">-- Selecciona una opción --</option>
+                    <option value="Samuel">Samuel</option>
+                    <option value="Salomon">Salomon</option>
+                    <option value="Aaron">Aaron</option>
+                    <option value="Ethan">Ethan</option>
+                    <option value="Dylan">Dylan</option>
+                    <option value="Julian">Julian</option>
+                    <option value="Austin">Austin</option>
+                </select>
+            </div>
+        </form>
+
+        <div class="submit-section">
+            <button type="button" class="submit-button" onclick="submitPrediction()">✨ Enviar Apuesta</button>
+            
+            <div class="confirmation-message" id="confirmationMessage">
+                <h4>✓ ¡Predicción registrada con éxito!</h4>
+                <p id="participantName"></p>
+            </div>
+
+            <div class="points-breakdown" id="pointsBreakdown">
+                <h3>Desglose de Puntos (Total: 100)</h3>
+                <div class="points-item">
+                    <span class="points-label">Mes estimado</span>
+                    <span class="points-value">10 puntos</span>
+                </div>
+                <div class="points-item">
+                    <span class="points-label">Semana de gestación</span>
+                    <span class="points-value">15 puntos</span>
+                </div>
+                <div class="points-item">
+                    <span class="points-label">Día exacto 🏆</span>
+                    <span class="points-value">30 puntos</span>
+                </div>
+                <div class="points-item">
+                    <span class="points-label">Franja horaria</span>
+                    <span class="points-value">20 puntos</span>
+                </div>
+                <div class="points-item">
+                    <span class="points-label">Peso estimado (más cercano)</span>
+                    <span class="points-value">15 puntos</span>
+                </div>
+                <div class="points-item">
+                    <span class="points-label">Tipo de parto</span>
+                    <span class="points-value">10 puntos</span>
+                </div>
+                <div class="points-item">
+                    <span class="points-label">Total de puntos posibles</span>
+                    <span class="points-value">100 puntos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANTE: Reemplaza esta URL con tu Web App URL de Google Apps Script
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBPYDs5uI_OsmfmxSRTyEvRMtB2L9ZHNaPW6z3fhykUNtw-0K0Z8gtXrnuLkgPMkRL0Q/exec';
+
+        // Week selector functionality
+        const weekButtons = document.querySelectorAll('.week-button');
+        const semanaInput = document.getElementById('semana');
+
+        weekButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                weekButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                semanaInput.value = this.dataset.week;
+            });
+        });
+
+        // Time slot selector functionality
+        const timeSlots = document.querySelectorAll('.time-slot');
+        const franjaInput = document.getElementById('franja');
+
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', function() {
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                franjaInput.value = this.dataset.time;
+            });
+        });
+
+        // Convertir fecha a formato dd/mm/yyyy
+        const fechaInput = document.getElementById('fecha');
+        const fechaFormateadaInput = document.getElementById('fechaFormateada');
+
+        fechaInput.addEventListener('change', function() {
+            if (this.value) {
+                const [year, month, day] = this.value.split('-');
+                fechaFormateadaInput.value = `${day}/${month}/${year}`;
+            }
+        });
+
+        // Form submission
+        async function submitPrediction() {
+            const form = document.getElementById('predictionForm');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const submitButton = document.querySelector('.submit-button');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '⏳ Enviando...';
+            submitButton.disabled = true;
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Usar fecha formateada
+            data.fecha = data.fechaFormateada;
+            delete data.fechaFormateada;
+            
+            // Agregar timestamp
+            data.timestamp = new Date().toLocaleString('es-EC', { 
+                timeZone: 'America/Guayaquil',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            try {
+                // Enviar a Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Show confirmation
+                const confirmationMessage = document.getElementById('confirmationMessage');
+                const participantName = document.getElementById('participantName');
+                const pointsBreakdown = document.getElementById('pointsBreakdown');
+
+                participantName.textContent = `Gracias, ${data.nombre}. Tu predicción ha sido guardada exitosamente.`;
+                
+                confirmationMessage.classList.add('visible');
+                pointsBreakdown.classList.add('visible');
+
+                // Scroll to confirmation
+                setTimeout(() => {
+                    confirmationMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+
+                // Reset form
+                form.reset();
+                weekButtons.forEach(btn => btn.classList.remove('selected'));
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                semanaInput.value = '';
+                franjaInput.value = '';
+                fechaFormateadaInput.value = '';
+
+                submitButton.innerHTML = '✓ Enviado';
+                setTimeout(() => {
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Hubo un error al enviar tu predicción. Por favor intenta de nuevo.');
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }
+        }
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fecha').setAttribute('min', today);
+    </script>
+</body>
+</html>
