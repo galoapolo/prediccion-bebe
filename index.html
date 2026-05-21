@@ -559,7 +559,7 @@
                     <span>Fecha exacta de nacimiento</span>
                     <span class="points-badge">🏆 30 pts</span>
                 </label>
-                <input type="date" id="fecha" name="fecha" min="2025-05-01" max="2025-06-30" required>
+                <input type="date" id="fecha" name="fecha" required>
                 <input type="hidden" id="fechaFormateada" name="fechaFormateada">
                 <p class="input-hint">Selecciona el día específico que predices</p>
             </div>
@@ -681,7 +681,7 @@
 
     <script>
         // IMPORTANTE: Reemplaza esta URL con tu Web App URL de Google Apps Script
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBPYDs5uI_OsmfmxSRTyEvRMtB2L9ZHNaPW6z3fhykUNtw-0K0Z8gtXrnuLkgPMkRL0Q/exec';
+        const GOOGLE_SCRIPT_URL = 'TU_WEB_APP_URL_AQUI';
 
         // Week selector functionality
         const weekButtons = document.querySelectorAll('.week-button');
@@ -797,10 +797,6 @@
                 submitButton.disabled = false;
             }
         }
-
-        // Set minimum date to today
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('fecha').setAttribute('min', today);
     </script>
 </body>
 </html>
